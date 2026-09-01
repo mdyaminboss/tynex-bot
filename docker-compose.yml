@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: tynex_hosting_bot
+    restart: always
+    environment:
+      - BOT_TOKEN=8852284221:AAFHysf9GB9Jfh25tBYyg0K5SVxPINTINCY
+      - REQUIRED_CHANNEL=@MrTripleR_YT0
+      - DEVELOPER=@YaminOnFire07
+      - BOT_NAME=TYNEX HOSTING SERVER
+      - ADMIN_IDS=YOUR_TELEGRAM_NUMERIC_ID_HERE
+      - DATABASE_URL=postgresql://postgres:securepassword@db:5432/tynex_hosting
+      - STORAGE_PATH=/app/storage
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./storage:/app/storage
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: tynex_hosting_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=securepassword
+      - POSTGRES_DB=tynex_hosting
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres_data:
+  storage:
